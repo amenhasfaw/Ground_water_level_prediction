@@ -1,21 +1,7 @@
+# web_interface.py
 import streamlit as st
-import pickle
 import pandas as pd
-
-# Load the trained model
-model_file_path = 'gradient_boosting_regressor_model.pkl'
-with open(model_file_path, 'rb') as file:
-        model = pickle.load(file)
-
-# Function to predict Ground Water Level
-def predict_ground_water_level(precipitation, humidity, temperature):
-    # Create a DataFrame with user inputs
-    input_data = pd.DataFrame({'Precipitation': [precipitation],
-                               'Humidity': [humidity],
-                               'Temperature': [temperature]})
-    # Make prediction
-    prediction = model.predict(input_data)
-    return prediction[0]
+import model  # Import the model module
 
 # Streamlit app layout
 st.title('Ground Water Level Prediction')
@@ -27,5 +13,17 @@ temperature = st.number_input('Temperature (°C)', min_value=-50.0, max_value=50
 
 # Output section
 if st.button('Predict'):
-    prediction = predict_ground_water_level(precipitation, humidity, temperature)
-    st.write(f'Predicted Ground Water Level: {prediction:.2f}')
+    # Load the model
+    model_path = 'gradient_boosting_regressor_model.pkl'  # Specify the model path
+    model = model.load_model(model_path)
+    
+    # Create a DataFrame with user inputs
+    input_data = pd.DataFrame({'Precipitation': [precipitation],
+                               'Humidity': [humidity],
+                               'Temperature': [temperature]})
+    
+    # Make prediction
+    prediction = model.predict(input_data)
+    
+    # Display prediction
+    st.write(f'Predicted Ground Water Level: {prediction[0]:.2f}')
