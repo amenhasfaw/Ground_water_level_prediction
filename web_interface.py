@@ -1,11 +1,11 @@
 import streamlit as st
-import pickle
+import joblib
 import pandas as pd
 
 # Load the trained model
 model_file_path = 'gradient_boosting_regressor_model.pkl'
 with open(model_file_path, 'rb') as file:
-    model = pickle.load(file)
+    model = joblib.load('gradient_boosting_regressor_model.joblib')
 
 # Function to predict Ground Water Level
 def predict_ground_water_level(precipitation, humidity, temperature):
